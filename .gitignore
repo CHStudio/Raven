@@ -1,1 +1,7 @@
 /vendor/
+/example/
+.php-cs-fixer.php
+phpunit.xml
+.php-cs-fixer.cache
+.phpunit.result.cache
+tools
