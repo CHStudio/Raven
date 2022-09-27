@@ -11,8 +11,8 @@ use Psr\Http\Message\StreamFactoryInterface;
 class RequestFactory implements InternalRequestFactoryInterface
 {
     public function __construct(
-        public readonly RequestFactoryInterface $requestFactory,
-        public readonly StreamFactoryInterface $streamFactory
+        private readonly RequestFactoryInterface $requestFactory,
+        private readonly StreamFactoryInterface $streamFactory
     ) {
     }
 
@@ -27,7 +27,7 @@ class RequestFactory implements InternalRequestFactoryInterface
 
         $uri = new Uri($data['uri']);
         $headers = new Headers($data['headers'] ?? []);
-        $method = \is_string($data['method']) ? $data['method'] : 'GET';
+        $method = (isset($data['method']) && \is_string($data['method'])) ? $data['method'] : 'GET';
 
         $request = $this->requestFactory->createRequest($method, (string) $uri);
         foreach ($headers as $name => $value) {
@@ -39,15 +39,15 @@ class RequestFactory implements InternalRequestFactoryInterface
                 $body = $data['body'];
             } elseif (\is_array($data['body'])) {
                 $body = match ($headers->first('Content-Type')) {
-                    'application/json' => json_encode($data['body']),
+                    'application/json' => json_encode($data['body'], JSON_THROW_ON_ERROR),
                     'multipart/form-data' => http_build_query($data['body']),
-                    default => json_encode($data['body'])
+                    default => json_encode($data['body'], JSON_THROW_ON_ERROR)
                 };
             }
 
             if (isset($body)) {
                 $request = $request->withBody(
-                    $this->streamFactory->createStream((string) $body)
+                    $this->streamFactory->createStream($body)
                 );
             }
         }

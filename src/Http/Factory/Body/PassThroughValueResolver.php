@@ -2,7 +2,7 @@
 
 namespace CHStudio\Raven\Http\Factory\Body;
 
-class ScalarValueResolver implements BodyResolverInterface
+class PassThroughValueResolver implements BodyResolverInterface
 {
     public function resolve(mixed $value): mixed
     {

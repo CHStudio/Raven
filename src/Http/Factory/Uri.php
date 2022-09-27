@@ -19,7 +19,7 @@ class Uri implements Stringable
             }
 
             $parameters = $value['parameters'] ?? [];
-            $value = str_replace(array_keys($parameters), $parameters, $value['base']);
+            $value = str_replace(array_keys($parameters), $parameters, (string) $value['base']);
         } elseif (!\is_string($value)) {
             throw new InvalidArgumentException('$value must be a string or an array.');
         }

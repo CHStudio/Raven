@@ -4,7 +4,6 @@ namespace CHStudio\Raven\Validator\Expectation;
 
 use ArrayIterator;
 use IteratorAggregate;
-use Traversable;
 
 /**
  * @implements IteratorAggregate<int, ResponseExpectationInterface>
@@ -22,7 +21,10 @@ class ExpectationCollection implements IteratorAggregate
         $this->expectations = $expectations;
     }
 
-    public function getIterator(): Traversable
+    /**
+     * @return ArrayIterator<int, ResponseExpectationInterface>
+     */
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->expectations);
     }

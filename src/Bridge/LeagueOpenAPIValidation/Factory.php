@@ -7,7 +7,7 @@ use League\OpenAPIValidation\PSR7\ValidatorBuilder;
 
 class Factory
 {
-    private ValidationExceptionMapper $mapper;
+    private readonly ValidationExceptionMapper $mapper;
 
     public function __construct(
         private readonly ValidatorBuilder $validator,
