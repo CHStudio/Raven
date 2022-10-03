@@ -19,7 +19,7 @@ class ValidationExceptionMapper
         $chain = [];
         $current = $error;
         while ($current) {
-            $chain[\get_class($current)] = $current;
+            $chain[$current::class] = $current;
             $current = $current->getPrevious();
         }
 

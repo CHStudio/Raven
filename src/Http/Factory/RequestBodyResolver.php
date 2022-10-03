@@ -5,7 +5,7 @@ namespace CHStudio\Raven\Http\Factory;
 use CHStudio\Raven\Http\Factory\Body\BodyResolverInterface;
 use Psr\Http\Message\RequestInterface;
 
-class RequestBodyResolver
+class RequestBodyResolver implements RequestFactoryInterface
 {
     public function __construct(
         private readonly BodyResolverInterface $resolver,

@@ -4,11 +4,12 @@ namespace CHStudio\Raven\Http\Factory\Body;
 
 use Faker\Generator;
 use InvalidArgumentException;
+use JsonException;
 
 class FakerValueResolver implements BodyResolverInterface
 {
     public function __construct(
-        public readonly Generator $faker,
+        private readonly Generator $faker,
         private readonly BodyResolverInterface $resolver
     ) {
     }
@@ -16,7 +17,7 @@ class FakerValueResolver implements BodyResolverInterface
     public function resolve(mixed $value): mixed
     {
         if (\is_string($value) && preg_match('/<([^(]+)\((.*)\)>/', $value, $matches) === 1) {
-            return $this->resolveFakerValue($matches) ?? $value;
+            return $this->resolveFakerValue($matches);
         }
 
         return $this->resolver->resolve($value);
@@ -27,18 +28,22 @@ class FakerValueResolver implements BodyResolverInterface
      */
     private function resolveFakerValue(array $matches): mixed
     {
-        $methodName = $matches[1];
-        $arguments =  json_decode('['.$matches[2].']', true, 512, JSON_THROW_ON_ERROR);
-
         try {
-            /** @var callable(): mixed */
-            $callable = [$this->faker, $methodName];
+            $methodName = $matches[1];
+            $arguments =  json_decode('['.$matches[2].']', true, 512, JSON_THROW_ON_ERROR);
 
-            return \call_user_func_array(
-                $callable,
+            return $this->faker->__call(
+                $methodName,
                 \is_array($arguments) ? $arguments : [$arguments]
             );
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
+        } catch (JsonException $error) {
+            $message = sprintf(
+                "Can't extract the arguments to call method %s: [%s]",
+                $matches[1],
+                $matches[2]
+            );
+            throw new InvalidArgumentException($message, 0, $error);
         }
 
         return null;

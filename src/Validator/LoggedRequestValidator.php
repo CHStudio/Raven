@@ -22,7 +22,7 @@ class LoggedRequestValidator implements RequestValidatorInterface
         ));
         $this->decorated->validate($request);
         $this->logger->debug(sprintf(
-            'Finished testing Request: [%s] %s',
+            'Finish testing Request: [%s] %s',
             $request->getMethod(),
             $request->getUri()
         ));

@@ -76,19 +76,21 @@ class Headers implements IteratorAggregate, Stringable
      */
     public function set(string $offset, array|string $values): void
     {
+        $normalized = $this->normalizeName($offset);
+
         if (\is_array($values)) {
             $values = array_values($values);
 
-            if (!isset($this->headers[$offset])) {
-                $this->headers[$offset] = $values;
+            if (!isset($this->headers[$normalized])) {
+                $this->headers[$normalized] = $values;
             } else {
-                $this->headers[$offset] = array_merge($this->headers[$offset], $values);
+                $this->headers[$normalized] = array_merge($this->headers[$normalized], $values);
             }
         } else {
-            if (!isset($this->headers[$offset])) {
-                $this->headers[$offset] = [$values];
+            if (!isset($this->headers[$normalized])) {
+                $this->headers[$normalized] = [$values];
             } else {
-                $this->headers[$offset][] = $values;
+                $this->headers[$normalized][] = $values;
             }
         }
     }
