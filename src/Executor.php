@@ -17,15 +17,19 @@ class Executor implements ExecutorInterface
     ) {
     }
 
-    public function execute(RequestInterface $request, ExpectationCollection $expectations): void
-    {
+    public function execute(
+        RequestInterface $request,
+        ExpectationCollection $expectations = null
+    ): void {
         $this->requestValidator->validate($request);
         $response = $this->client->sendRequest($request);
 
-        foreach ($expectations as $expectation) {
-            $error = $expectation->verify($response);
-            if ($error !== null) {
-                throw $error;
+        if ($expectations !== null) {
+            foreach ($expectations as $expectation) {
+                $error = $expectation->verify($response);
+                if ($error !== null) {
+                    throw $error;
+                }
             }
         }
 
