@@ -15,6 +15,7 @@ use CHStudio\Raven\Validator\Exception\GenericException;
 use CHStudio\Raven\Validator\Exception\ResponseNotExpectedException;
 use CHStudio\Raven\Validator\Exception\ValidationException;
 use CHStudio\Raven\Validator\ResponseValidatorInterface;
+use Exception;
 use InvalidArgumentException;
 use League\OpenAPIValidation\PSR7\Exception\NoResponseCode;
 use League\OpenAPIValidation\PSR7\OperationAddress;
@@ -24,6 +25,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
+use Throwable;
 
 final class ResponseValidatorTest extends TestCase
 {
@@ -135,6 +137,36 @@ final class ResponseValidatorTest extends TestCase
         $validator->validate($response, $request);
     }
 
+    public function testItCapturesSpecificSpecFinderErrorsFromLeagueLibraryAsResponseNotFound(): void
+    {
+        $this->expectException(ResponseNotExpectedException::class);
+
+        [, $request, $response, $responseValidator] = $this->prepare();
+
+        $specFinderError = $this->createMock(Throwable::class);
+        // A bit hacky but getFile is a final method.
+        $reflection = new \ReflectionObject($specFinderError);
+        $property = $reflection->getProperty('file');
+        $property->setAccessible(true);
+        $property->setValue($specFinderError, '/a/path/to/SpecFinder.php');
+
+        $responseValidator
+            ->expects(static::once())
+            ->method('validate')
+            ->with(
+                static::callback(fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
+                $response
+            )
+            ->willThrowException($specFinderError);
+
+        $validator = new ResponseValidator(
+            $responseValidator,
+            new ValidationExceptionMapper()
+        );
+
+        $validator->validate($response, $request);
+    }
+
     private function prepare(): array
     {
         $openApi = new OpenApi([
@@ -142,10 +174,10 @@ final class ResponseValidatorTest extends TestCase
                 '/' => new PathItem([
                     'get' => new Operation([])
                 ])
-                ]),
-                'servers' => [
-                    new Server(['url' => '/'])
-                ]
+            ]),
+            'servers' => [
+                new Server(['url' => '/'])
+            ]
         ]);
 
         $uri = $this->createMock(UriInterface::class);
