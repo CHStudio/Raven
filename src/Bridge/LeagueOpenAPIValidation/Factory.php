@@ -4,6 +4,7 @@ namespace CHStudio\Raven\Bridge\LeagueOpenAPIValidation;
 
 use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Exception\InvalidOpenApiDefinitionException;
 use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Exception\ValidationExceptionMapper;
+use InvalidArgumentException;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
 use Throwable;
 
@@ -20,6 +21,12 @@ class Factory
 
     public static function fromYamlFile(string $path): self
     {
+        if (!is_readable($path)) {
+            throw new InvalidArgumentException(
+                sprintf('Filename given isn\'t readable: %s', $path)
+            );
+        }
+
         return new self(
             (new ValidatorBuilder())->fromYamlFile($path)
         );
@@ -27,6 +34,12 @@ class Factory
 
     public static function fromJsonFile(string $path): self
     {
+        if (!is_readable($path)) {
+            throw new InvalidArgumentException(
+                sprintf('Filename given isn\'t readable: %s', $path)
+            );
+        }
+
         return new self(
             (new ValidatorBuilder())->fromJsonFile($path)
         );
