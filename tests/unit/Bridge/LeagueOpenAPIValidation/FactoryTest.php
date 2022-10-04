@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace CHStudio\RavenTest\Bridge\LeagueOpenAPIValidation;
 
+use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Exception\InvalidOpenApiDefinitionException;
 use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Factory;
 use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\RequestValidator;
 use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\ResponseValidator;
+use Exception;
+use InvalidArgumentException;
 use League\OpenAPIValidation\PSR7\RequestValidator as PSR7RequestValidator;
 use League\OpenAPIValidation\PSR7\ResponseValidator as PSR7ResponseValidator;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
@@ -30,6 +33,32 @@ final class FactoryTest extends TestCase
 
         static::assertInstanceOf(RequestValidator::class, $factory->getRequestValidator());
         static::assertInstanceOf(ResponseValidator::class, $factory->getResponseValidator());
+    }
+
+    public function testItCaptureErrorsDuringRequestValidatorCreation(): void
+    {
+        $this->expectException(InvalidOpenApiDefinitionException::class);
+
+        $leagueBuilder = $this->createMock(ValidatorBuilder::class);
+        $leagueBuilder
+            ->expects(static::once())
+            ->method('getRequestValidator')
+            ->willThrowException(new Exception('Anything happened there…'));
+
+        (new Factory($leagueBuilder))->getRequestValidator();
+    }
+
+    public function testItCaptureErrorsDuringResponseValidatorCreation(): void
+    {
+        $this->expectException(InvalidOpenApiDefinitionException::class);
+
+        $leagueBuilder = $this->createMock(ValidatorBuilder::class);
+        $leagueBuilder
+            ->expects(static::once())
+            ->method('getResponseValidator')
+            ->willThrowException(new Exception('Anything happened there…'));
+
+        (new Factory($leagueBuilder))->getResponseValidator();
     }
 
     public function testItCanBeBuiltFromYamlFile(): void
@@ -73,5 +102,19 @@ final class FactoryTest extends TestCase
 
         static::assertInstanceOf(RequestValidator::class, $factory->getRequestValidator());
         static::assertInstanceOf(ResponseValidator::class, $factory->getResponseValidator());
+    }
+
+    public function testItCantBeBuiltFromInexistantJsonFile(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        Factory::fromJsonFile('/a/fake/path');
+    }
+
+    public function testItCantBeBuiltFromInexistantYamlFile(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        Factory::fromYamlFile('/a/fake/path');
     }
 }

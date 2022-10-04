@@ -34,6 +34,12 @@ class ResponseValidator implements ResponseValidatorInterface
         } catch (NoResponseCode $e) {
             throw new ResponseNotExpectedException($request, $input, $e);
         } catch (\Throwable $e) {
+            // Capture league/openapi-psr7-validator SpecFinder errors
+            // it reads properties that might not exists.
+            if (str_contains($e->getFile(), 'SpecFinder.php')) {
+                throw new ResponseNotExpectedException($request, $input, $e);
+            }
+
             $error = $this->mapper->map($e);
             if ($error !== null) {
                 throw $error;
