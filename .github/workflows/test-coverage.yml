@@ -1,0 +1,33 @@
+on: ["push", "pull_request"]
+
+name: Test coverage
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v3"
+        with:
+            # Fetch 10 commits or Scrutinizer will throw ("Failed to retrieve commit parents. If you use a shallow git checkout, please checkout at least a depth of one."), see: RepositoryIntrospector at scrutinizer-ci/ocular GitHub repository
+            # 10 commits is an arbitrary value that is more than 1 commit
+            fetch-depth: 10
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "pcov"
+          php-version: "8.1"
+          ini-values: memory_limit=-1
+
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
+
+      - name: "Tests"
+        run: "vendor/bin/phpunit --coverage-clover=coverage.clover"
+
+      - name: Upload Scrutinizer coverage
+        uses: sudo-bot/action-scrutinizer@latest
+        with:
+          cli-args: "--format=php-clover coverage.clover"
