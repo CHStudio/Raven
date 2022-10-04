@@ -1,5 +1,9 @@
 # Raven - How to test your API documentation and behavior.
 
+[![Latest Stable Version](https://poser.pugx.org/chstudio/raven/v/stable)](https://packagist.org/packages/chstudio/raven)
+[![License](https://poser.pugx.org/chstudio/raven/license)](https://packagist.org/packages/chstudio/raven)
+
+
 This library was written to allow testing OpenAPI documentation easily. It also
 allows verifying that your code implementation is compatible with that
 documentation.
