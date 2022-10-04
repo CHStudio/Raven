@@ -109,7 +109,7 @@ header:
 
 * `application/json`, no header or unsupported header will be transformed to
   JSON,
-* `multipart/form-data`, will used `http_build_query`.
+* `multipart/form-data`, will use `http_build_query`.
 
 ### Enrich your request body with resolver
 
@@ -128,7 +128,7 @@ You can build your own resolvers using the `BodyResolverInterface`.
 
 use CHStudio\Raven\Http\Factory\Body\ArrayValueResolver;
 use CHStudio\Raven\Http\Factory\Body\FakerValueResolver;
-use CHStudio\Raven\Http\Factory\Body\ScalarValueResolver;
+use CHStudio\Raven\Http\Factory\Body\PassThroughValueResolver;
 
 $generator = \Faker\Factory::create();
 
@@ -138,7 +138,7 @@ $requestFactory = new RequestBodyResolver(
     new ArrayValueResolver(
         new FakerValueResolver(
             $generator,
-            new ScalarValueResolver()
+            new PassThroughValueResolver()
         )
     ),
     $requestFactory
@@ -213,3 +213,11 @@ $executor->execute($request, $expectations);
 
 This library come with built in expectations: `StatusCode`. You can easily build
 your own using the `ResponseExpectationInterface`.
+
+## License
+
+This package is released under the [Apache-2 license](LICENCE).
+
+## Contribute
+
+If you wish to contribute to the project, please read the [CONTRIBUTING](CONTRIBUTING.md) notes.
