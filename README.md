@@ -1,5 +1,8 @@
 # Raven - How to test your API documentation and behavior.
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/CHStudio/Raven/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/CHStudio/Raven/?branch=main)
+[![Code Coverage](https://scrutinizer-ci.com/g/CHStudio/Raven/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/CHStudio/Raven/?branch=main)
+
 [![Latest Stable Version](https://poser.pugx.org/chstudio/raven/v/stable)](https://packagist.org/packages/chstudio/raven)
 [![License](https://poser.pugx.org/chstudio/raven/license)](https://packagist.org/packages/chstudio/raven)
 
