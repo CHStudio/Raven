@@ -2,8 +2,10 @@
 
 namespace CHStudio\Raven\Bridge\LeagueOpenAPIValidation;
 
+use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Exception\InvalidOpenApiDefinitionException;
 use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Exception\ValidationExceptionMapper;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
+use Throwable;
 
 class Factory
 {
@@ -32,11 +34,19 @@ class Factory
 
     public function getRequestValidator(): RequestValidator
     {
-        return new RequestValidator($this->validator->getRequestValidator(), $this->mapper);
+        try {
+            return new RequestValidator($this->validator->getRequestValidator(), $this->mapper);
+        } catch (Throwable $error) {
+            throw new InvalidOpenApiDefinitionException($error);
+        }
     }
 
     public function getResponseValidator(): ResponseValidator
     {
-        return new ResponseValidator($this->validator->getResponseValidator(), $this->mapper);
+        try {
+            return new ResponseValidator($this->validator->getResponseValidator(), $this->mapper);
+        } catch (Throwable $error) {
+            throw new InvalidOpenApiDefinitionException($error);
+        }
     }
 }
