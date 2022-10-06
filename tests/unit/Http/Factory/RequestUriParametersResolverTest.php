@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace CHStudio\RavenTest\Http\Factory;
 
 use CHStudio\Raven\Http\Factory\Resolver\ValueResolverInterface;
-use CHStudio\Raven\Http\Factory\RequestBodyResolver;
+use CHStudio\Raven\Http\Factory\RequestUriParametersResolver;
 use CHStudio\Raven\Http\Factory\RequestFactoryInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 
-final class RequestBodyResolverTest extends TestCase
+final class RequestUriParametersResolverTest extends TestCase
 {
     public function testItCanBeBuilt(): void
     {
         $bodyResolver = $this->createMock(ValueResolverInterface::class);
         $decorated = $this->createMock(RequestFactoryInterface::class);
 
-        $factory = new RequestBodyResolver($bodyResolver, $decorated);
+        $factory = new RequestUriParametersResolver($bodyResolver, $decorated);
 
         static::assertInstanceOf(RequestFactoryInterface::class, $factory);
     }
 
-    public function testItResolvesBodyWhenThereIsOne(): void
+    public function testItResolvesUriParametersWhenThereIsOne(): void
     {
         $bodyResolver = $this->createMock(ValueResolverInterface::class);
         $decorated = $this->createMock(RequestFactoryInterface::class);
@@ -36,14 +36,14 @@ final class RequestBodyResolverTest extends TestCase
         $decorated
             ->expects(static::once())
             ->method('fromArray')
-            ->with(['body' => ['c']])
+            ->with(['uri' => ['parameters' => ['c']]])
             ->willReturn($this->createMock(RequestInterface::class));
 
-        (new RequestBodyResolver($bodyResolver, $decorated))
-            ->fromArray(['body' => ['a' => 'b']]);
+        (new RequestUriParametersResolver($bodyResolver, $decorated))
+            ->fromArray(['uri' => ['parameters' => ['a' => 'b']]]);
     }
 
-    public function testItDoesntCallResolverOnEmptyBody(): void
+    public function testItDoesntCallResolverOnEmptyParameters(): void
     {
         $bodyResolver = $this->createMock(ValueResolverInterface::class);
         $decorated = $this->createMock(RequestFactoryInterface::class);
@@ -56,7 +56,7 @@ final class RequestBodyResolverTest extends TestCase
             ->with([])
             ->willReturn($this->createMock(RequestInterface::class));
 
-        (new RequestBodyResolver($bodyResolver, $decorated))
+        (new RequestUriParametersResolver($bodyResolver, $decorated))
             ->fromArray([]);
     }
 }

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CHStudio\RavenTest\Http\Factory\Body;
+namespace CHStudio\RavenTest\Http\Factory\Resolver;
 
-use CHStudio\Raven\Http\Factory\Body\BodyResolverInterface;
-use CHStudio\Raven\Http\Factory\Body\FakerValueResolver;
+use CHStudio\Raven\Http\Factory\Resolver\ValueResolverInterface;
+use CHStudio\Raven\Http\Factory\Resolver\FakerValueResolver;
 use Faker\Generator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -16,10 +16,10 @@ final class FakerValueResolverTest extends TestCase
     {
         $resolver = new FakerValueResolver(
             $this->createMock(Generator::class),
-            $this->createMock(BodyResolverInterface::class)
+            $this->createMock(ValueResolverInterface::class)
         );
 
-        static::assertInstanceOf(BodyResolverInterface::class, $resolver);
+        static::assertInstanceOf(ValueResolverInterface::class, $resolver);
     }
 
     /**
@@ -27,7 +27,7 @@ final class FakerValueResolverTest extends TestCase
      */
     public function testItPassTheValueToNextResolverInDifferent(mixed $parameter): void
     {
-        $decorated = $this->createMock(BodyResolverInterface::class);
+        $decorated = $this->createMock(ValueResolverInterface::class);
         $decorated
             ->expects(static::once())
             ->method('resolve')
@@ -57,7 +57,7 @@ final class FakerValueResolverTest extends TestCase
      */
     public function testItResolveTheValueThroughFakerGenerator(string $parameter, string $method, array $arguments): void
     {
-        $decorated = $this->createMock(BodyResolverInterface::class);
+        $decorated = $this->createMock(ValueResolverInterface::class);
         $decorated
             ->expects(static::never())
             ->method('resolve');
@@ -85,7 +85,7 @@ final class FakerValueResolverTest extends TestCase
 
     public function testItCaptureFakerInvalidArguments(): void
     {
-        $decorated = $this->createMock(BodyResolverInterface::class);
+        $decorated = $this->createMock(ValueResolverInterface::class);
         $decorated
             ->expects(static::never())
             ->method('resolve');
@@ -109,7 +109,7 @@ final class FakerValueResolverTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/^Can\'t extract the arguments to call method/');
 
-        $decorated = $this->createMock(BodyResolverInterface::class);
+        $decorated = $this->createMock(ValueResolverInterface::class);
         $decorated
             ->expects(static::never())
             ->method('resolve');

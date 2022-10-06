@@ -5,7 +5,7 @@ namespace CHStudio\Raven\Http\Factory;
 use CHStudio\Raven\Http\Factory\Resolver\ValueResolverInterface;
 use Psr\Http\Message\RequestInterface;
 
-class RequestBodyResolver implements RequestFactoryInterface
+class RequestUriParametersResolver implements RequestFactoryInterface
 {
     public function __construct(
         private readonly ValueResolverInterface $resolver,
@@ -18,8 +18,8 @@ class RequestBodyResolver implements RequestFactoryInterface
      */
     public function fromArray(array $data): RequestInterface
     {
-        if (isset($data['body']) && \is_array($data['body'])) {
-            $data['body'] = $this->resolver->resolve($data['body']);
+        if (isset($data['uri']) && \is_array($data['uri'])) {
+            $data['uri']['parameters'] = $this->resolver->resolve($data['uri']['parameters'] ?? []);
         }
 
         return $this->decorated->fromArray($data);

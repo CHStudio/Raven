@@ -1,16 +1,16 @@
 <?php
 
-namespace CHStudio\Raven\Http\Factory\Body;
+namespace CHStudio\Raven\Http\Factory\Resolver;
 
 use Faker\Generator;
 use InvalidArgumentException;
 use JsonException;
 
-class FakerValueResolver implements BodyResolverInterface
+class FakerValueResolver implements ValueResolverInterface
 {
     public function __construct(
         private readonly Generator $faker,
-        private readonly BodyResolverInterface $resolver
+        private readonly ValueResolverInterface $resolver
     ) {
     }
 

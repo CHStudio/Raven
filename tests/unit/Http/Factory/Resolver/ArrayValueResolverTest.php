@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace CHStudio\RavenTest\Http\Factory\Body;
+namespace CHStudio\RavenTest\Http\Factory\Resolver;
 
-use CHStudio\Raven\Http\Factory\Body\ArrayValueResolver;
-use CHStudio\Raven\Http\Factory\Body\BodyResolverInterface;
+use CHStudio\Raven\Http\Factory\Resolver\ArrayValueResolver;
+use CHStudio\Raven\Http\Factory\Resolver\ValueResolverInterface;
 use PHPUnit\Framework\TestCase;
 
 final class ArrayValueResolverTest extends TestCase
 {
     public function testItCanBeBuilt(): void
     {
-        $decorated = $this->createMock(BodyResolverInterface::class);
+        $decorated = $this->createMock(ValueResolverInterface::class);
         $arrayResolver = new ArrayValueResolver($decorated);
 
-        static::assertInstanceOf(BodyResolverInterface::class, $arrayResolver);
+        static::assertInstanceOf(ValueResolverInterface::class, $arrayResolver);
     }
 
     public function testItResolveEachInnerArrayRecursively(): void
@@ -30,7 +30,7 @@ final class ArrayValueResolverTest extends TestCase
             ]
         ];
 
-        $decorated = $this->createMock(BodyResolverInterface::class);
+        $decorated = $this->createMock(ValueResolverInterface::class);
         $decorated
             ->expects(static::exactly(3))
             ->method('resolve')

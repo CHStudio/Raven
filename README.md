@@ -128,31 +128,43 @@ You can combine different `Resolver` and let the configured body pass through
 all the methods and be enriched. This library come with a specific `Faker`
 resolver to generate data easily with providers (see [Faker doc](https://fakerphp.github.io/formatters/)).
 
-You can build your own resolvers using the `BodyResolverInterface`.
+You can build your own resolvers using the `ValueResolverInterface`.
 
 ```php
 <?php
 
-use CHStudio\Raven\Http\Factory\Body\ArrayValueResolver;
-use CHStudio\Raven\Http\Factory\Body\FakerValueResolver;
-use CHStudio\Raven\Http\Factory\Body\PassThroughValueResolver;
+use CHStudio\Raven\Http\Factory\Resolver\ArrayValueResolver;
+use CHStudio\Raven\Http\Factory\Resolver\FakerValueResolver;
+use CHStudio\Raven\Http\Factory\Resolver\PassThroughValueResolver;
 
+//Configure your own faker generator, maybe with some `addProvider` calls.
 $generator = \Faker\Factory::create();
 
+//Configure specific resolver logic.
+$valueResolver = new ArrayValueResolver(
+    new FakerValueResolver(
+        $generator,
+        new PassThroughValueResolver()
+    )
+);
+
 //Apply it on the request factory built in the previous section.
-$requestFactory = new RequestBodyResolver(
-    //Configure specific resolver logic.
-    new ArrayValueResolver(
-        new FakerValueResolver(
-            $generator,
-            new PassThroughValueResolver()
-        )
-    ),
-    $requestFactory
+$requestFactory = new RequestUriParametersResolver(
+    $valueResolver,
+    new RequestBodyResolver(
+        $valueResolver,
+        $requestFactory
+    )
 );
 
 $request = $requestFactory->fromArray([
-    'uri' => 'http://myhost.com/api/users/me',
+    'uri' => [
+        'base' => 'http://myhost.com/api/users/{id}',
+        'parameters' => [
+            //This value will be resolved by `RequestUriParametersResolver`
+            '{id}' => '<userId()>'
+        ]
+    ],
     'method' => 'POST',
     'body' => [
         'scalar' => [
@@ -160,7 +172,7 @@ $request = $requestFactory->fromArray([
             'int' => 23456,
             'float' => 18.06
         ],
-        //Built in Faker provider
+        //Built in Faker provider resolved by `RequestBodyResolver`
         'faker' => [
             'name' => '<name()>',
             'creationDate' => '<date("Y-m-d")>',
@@ -171,6 +183,8 @@ $request = $requestFactory->fromArray([
 ]);
 
 /**
+ * This will generate an URL like this: http://myhost.com/api/users/a5098711-b6b2-4acb-96ea-f8baf496c700
+ *
  * This will generate the following body:
  *
  * {
