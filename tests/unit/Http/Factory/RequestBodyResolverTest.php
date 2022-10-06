@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CHStudio\RavenTest\Http\Factory;
 
-use CHStudio\Raven\Http\Factory\Body\BodyResolverInterface;
+use CHStudio\Raven\Http\Factory\Resolver\ValueResolverInterface;
 use CHStudio\Raven\Http\Factory\RequestBodyResolver;
 use CHStudio\Raven\Http\Factory\RequestFactoryInterface;
 use PHPUnit\Framework\TestCase;
@@ -14,7 +14,7 @@ final class RequestBodyResolverTest extends TestCase
 {
     public function testItCanBeBuilt(): void
     {
-        $bodyResolver = $this->createMock(BodyResolverInterface::class);
+        $bodyResolver = $this->createMock(ValueResolverInterface::class);
         $decorated = $this->createMock(RequestFactoryInterface::class);
 
         $factory = new RequestBodyResolver($bodyResolver, $decorated);
@@ -24,7 +24,7 @@ final class RequestBodyResolverTest extends TestCase
 
     public function testItResolvesBodyWhenThereIsOne(): void
     {
-        $bodyResolver = $this->createMock(BodyResolverInterface::class);
+        $bodyResolver = $this->createMock(ValueResolverInterface::class);
         $decorated = $this->createMock(RequestFactoryInterface::class);
 
         $bodyResolver
@@ -45,7 +45,7 @@ final class RequestBodyResolverTest extends TestCase
 
     public function testItDoesntCallResolverOnEmptyBody(): void
     {
-        $bodyResolver = $this->createMock(BodyResolverInterface::class);
+        $bodyResolver = $this->createMock(ValueResolverInterface::class);
         $decorated = $this->createMock(RequestFactoryInterface::class);
 
         $bodyResolver->expects(static::never())->method('resolve');

@@ -2,13 +2,13 @@
 
 namespace CHStudio\Raven\Http\Factory;
 
-use CHStudio\Raven\Http\Factory\Body\BodyResolverInterface;
+use CHStudio\Raven\Http\Factory\Resolver\ValueResolverInterface;
 use Psr\Http\Message\RequestInterface;
 
 class RequestBodyResolver implements RequestFactoryInterface
 {
     public function __construct(
-        private readonly BodyResolverInterface $resolver,
+        private readonly ValueResolverInterface $resolver,
         private readonly RequestFactoryInterface $decorated
     ) {
     }

@@ -1,11 +1,11 @@
 <?php
 
-namespace CHStudio\Raven\Http\Factory\Body;
+namespace CHStudio\Raven\Http\Factory\Resolver;
 
-class ArrayValueResolver implements BodyResolverInterface
+class ArrayValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        private readonly BodyResolverInterface $resolver
+        private readonly ValueResolverInterface $resolver
     ) {
     }
 

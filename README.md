@@ -128,14 +128,14 @@ You can combine different `Resolver` and let the configured body pass through
 all the methods and be enriched. This library come with a specific `Faker`
 resolver to generate data easily with providers (see [Faker doc](https://fakerphp.github.io/formatters/)).
 
-You can build your own resolvers using the `BodyResolverInterface`.
+You can build your own resolvers using the `ValueResolverInterface`.
 
 ```php
 <?php
 
-use CHStudio\Raven\Http\Factory\Body\ArrayValueResolver;
-use CHStudio\Raven\Http\Factory\Body\FakerValueResolver;
-use CHStudio\Raven\Http\Factory\Body\PassThroughValueResolver;
+use CHStudio\Raven\Http\Factory\Resolver\ArrayValueResolver;
+use CHStudio\Raven\Http\Factory\Resolver\FakerValueResolver;
+use CHStudio\Raven\Http\Factory\Resolver\PassThroughValueResolver;
 
 $generator = \Faker\Factory::create();
 

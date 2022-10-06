@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CHStudio\RavenTest\Http\Factory\Body;
+namespace CHStudio\RavenTest\Http\Factory\Resolver;
 
-use CHStudio\Raven\Http\Factory\Body\BodyResolverInterface;
-use CHStudio\Raven\Http\Factory\Body\PassThroughValueResolver;
+use CHStudio\Raven\Http\Factory\Resolver\ValueResolverInterface;
+use CHStudio\Raven\Http\Factory\Resolver\PassThroughValueResolver;
 use PHPUnit\Framework\TestCase;
 
 final class PassThroughValueResolverTest extends TestCase
@@ -14,7 +14,7 @@ final class PassThroughValueResolverTest extends TestCase
     {
         $resolver = new PassThroughValueResolver();
 
-        static::assertInstanceOf(BodyResolverInterface::class, $resolver);
+        static::assertInstanceOf(ValueResolverInterface::class, $resolver);
     }
 
     public function testItReturnGivenValue(): void
