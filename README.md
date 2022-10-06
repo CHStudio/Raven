@@ -14,7 +14,7 @@ documentation.
 ## Why creating such tool ?
 
 We work a lot on API related projects. Sometimes we create API, sometimes we
-consume them. The OpenAPI specification format is now well known and used in a
+consume them. The OpenAPI description format is now well known and used in a
 lot of different contexts.
 
 Our concern is that it's hard to ensure that the written documentation is
@@ -71,7 +71,7 @@ package which define a complete validation logic.
 use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Factory;
 use CHStudio\Raven\Validator\Expectation\ExpectationCollection;
 
-// Load OpenAPI specification
+// Load OpenAPI description file
 $factory = Factory::fromYamlFile('specific/path/to/openapi.yaml');
 
 $executor = new Executor(
