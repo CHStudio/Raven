@@ -6,6 +6,7 @@ use CHStudio\Raven\Validator\Exception\ApiSchemaException;
 use CHStudio\Raven\Validator\Exception\DataSchemaException;
 use CHStudio\Raven\Validator\Exception\GenericException;
 use CHStudio\Raven\Validator\Exception\ValidationException;
+use League\OpenAPIValidation\PSR7\Exception\Validation\InvalidQueryArgs;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
 use League\OpenAPIValidation\Schema\BreadCrumb;
 use League\OpenAPIValidation\Schema\Exception\InvalidSchema;
@@ -35,7 +36,8 @@ class ValidationExceptionMapper
         } elseif ($lastError instanceof InvalidSchema) {
             return new ApiSchemaException($lastError);
         } elseif ($lastError instanceof ValidationFailed) {
-            return new GenericException($lastError);
+            $previousError = prev($chain);
+            return new GenericException($previousError instanceof InvalidQueryArgs ? $previousError : $lastError);
         }
 
         return null;
