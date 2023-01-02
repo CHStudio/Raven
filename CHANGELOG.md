@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Changed
+- Capture explicitely new exceptions from the league/openapi-psr7-validator
+  library to ensure those errors will be useful for the end user (retrieving
+  correct message, correct file…).
+
 ## [v0.2.0] - 2022-10-29
 ### Changed
 - Add more open version constraints to let install Raven in more projects.

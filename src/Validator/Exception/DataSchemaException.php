@@ -13,7 +13,7 @@ class DataSchemaException extends RuntimeException implements ValidationExceptio
         Throwable $previous
     ) {
         $message = sprintf(
-            "Data validation failed for property %s, invalid value: %s\n%s",
+            "Data validation failed for property \"%s\", invalid value: %s\n\n> %s",
             $path,
             var_export($value, true),
             $previous->getMessage()
