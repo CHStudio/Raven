@@ -10,7 +10,7 @@ class OperationNotFoundException extends RuntimeException implements ValidationE
 {
     public function __construct(
         public readonly RequestInterface $request,
-        Throwable $previous
+        Throwable $previous = null
     ) {
         $message = sprintf(
             'API operation for request [%s] %s hasn\'t been found.',
