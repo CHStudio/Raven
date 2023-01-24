@@ -12,10 +12,10 @@ use cebe\openapi\spec\Server;
 use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Exception\ValidationExceptionMapper;
 use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\ResponseValidator;
 use CHStudio\Raven\Validator\Exception\GenericException;
+use CHStudio\Raven\Validator\Exception\OperationNotFoundException;
 use CHStudio\Raven\Validator\Exception\ResponseNotExpectedException;
 use CHStudio\Raven\Validator\Exception\ValidationException;
 use CHStudio\Raven\Validator\ResponseValidatorInterface;
-use Exception;
 use InvalidArgumentException;
 use League\OpenAPIValidation\PSR7\Exception\NoResponseCode;
 use League\OpenAPIValidation\PSR7\OperationAddress;
@@ -52,6 +52,83 @@ final class ResponseValidatorTest extends TestCase
                 static::callback(fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
                 $response
             );
+
+        $validator = new ResponseValidator(
+            $responseValidator,
+            new ValidationExceptionMapper()
+        );
+
+        $validator->validate($response, $request);
+    }
+
+    public function testItValidatesAgainstThePathThatMatchesTheBestTheCurrentRequest(): void
+    {
+        [$uri, $request, $response, $responseValidator] = $this->prepare(
+            new OpenApi([
+                'paths' => new Paths([
+                    '/api/path' => new PathItem([
+                        'get' => new Operation([])
+                    ]),
+                    '/api/{pattern}' => new PathItem([
+                        'get' => new Operation([])
+                    ])
+                ]),
+                'servers' => [
+                    new Server(['url' => '/'])
+                ]
+            ]),
+            'https://chstudio.fr/api/path'
+        );
+
+        $uri
+            ->expects(static::atLeastOnce())
+            ->method('getPath')
+            ->willReturn('/api/path');
+
+        $responseValidator
+            ->expects(static::once())
+            ->method('validate')
+            ->with(
+                static::callback(fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/api/path'),
+                $response
+            );
+
+        $validator = new ResponseValidator(
+            $responseValidator,
+            new ValidationExceptionMapper()
+        );
+
+        $validator->validate($response, $request);
+    }
+
+    public function testItFailsWhenNoOperationHaveBeenFoundThatMatchesTheCurrentRequest(): void
+    {
+        $this->expectException(OperationNotFoundException::class);
+        $this->expectExceptionMessageMatches('/\[GET\] https:\/\/chstudio\.fr\/anotherpath/');
+
+        [$uri, $request, $response, $responseValidator] = $this->prepare(
+            new OpenApi([
+                'paths' => new Paths([
+                    '/api/path' => new PathItem([
+                        'get' => new Operation([])
+                    ]),
+                    '/' => new PathItem([
+                        'get' => new Operation([])
+                    ])
+                ]),
+                'servers' => [
+                    new Server(['url' => '/'])
+                ]
+            ]),
+            'https://chstudio.fr/anotherpath'
+        );
+        $uri
+            ->expects(static::never())
+            ->method('getPath');
+
+        $responseValidator
+            ->expects(static::never())
+            ->method('validate');
 
         $validator = new ResponseValidator(
             $responseValidator,
@@ -167,9 +244,9 @@ final class ResponseValidatorTest extends TestCase
         $validator->validate($response, $request);
     }
 
-    private function prepare(): array
+    private function prepare(OpenApi $openApi = null, string $uriString = null): array
     {
-        $openApi = new OpenApi([
+        $openApi = $openApi ?? new OpenApi([
             'paths' => new Paths([
                 '/' => new PathItem([
                     'get' => new Operation([])
@@ -184,7 +261,7 @@ final class ResponseValidatorTest extends TestCase
         $uri
             ->expects(static::atLeastOnce())
             ->method('__toString')
-            ->willReturn('https://chstudio.fr/');
+            ->willReturn($uriString ?? 'https://chstudio.fr/');
         $request = $this->createMock(RequestInterface::class);
         $request
             ->expects(static::atLeastOnce())

@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- When an URI matches multiple API operations (example: `/api/path` and `/api/{pattern}`)
+  the `ResponseValidator` was looping over each and tried to validate the `ResponseInterface`
+  body with the definition. Now the `ResponseValidator` will only validates against
+  a single matching operation. If no operation matches, an error will be thrown.
+  That last point wasn't caught before.
 
 ## Changed
 - Capture explicitely new exceptions from the league/openapi-psr7-validator
