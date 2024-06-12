@@ -15,7 +15,7 @@ final class ArrayValueResolverTest extends TestCase
         $decorated = $this->createMock(ValueResolverInterface::class);
         $arrayResolver = new ArrayValueResolver($decorated);
 
-        static::assertInstanceOf(ValueResolverInterface::class, $arrayResolver);
+        self::assertInstanceOf(ValueResolverInterface::class, $arrayResolver);
     }
 
     public function testItResolveEachInnerArrayRecursively(): void
@@ -32,7 +32,7 @@ final class ArrayValueResolverTest extends TestCase
 
         $decorated = $this->createMock(ValueResolverInterface::class);
         $decorated
-            ->expects(static::exactly(3))
+            ->expects(self::exactly(3))
             ->method('resolve')
             ->withConsecutive(
                 ['b'],
@@ -43,7 +43,7 @@ final class ArrayValueResolverTest extends TestCase
 
         $arrayResolver = new ArrayValueResolver($decorated);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'a' => 'updated',
                 'c' => [

@@ -15,7 +15,7 @@ final class InvalidOpenApiDefinitionExceptionTest extends TestCase
     {
         $exception = new InvalidOpenApiDefinitionException(new Exception());
 
-        static::assertInstanceOf(InvalidArgumentException::class, $exception);
-        static::assertStringContainsString('The given OpenApi definition can\'t be loaded', $exception->getMessage());
+        self::assertInstanceOf(InvalidArgumentException::class, $exception);
+        self::assertStringContainsString('The given OpenApi definition can\'t be loaded', $exception->getMessage());
     }
 }

@@ -15,8 +15,8 @@ final class HeadersTest extends TestCase
     public function testItCanBeBuiltFromString(): void
     {
         $uri = new Headers([]);
-        static::assertInstanceOf(Stringable::class, $uri);
-        static::assertInstanceOf(IteratorAggregate::class, $uri);
+        self::assertInstanceOf(Stringable::class, $uri);
+        self::assertInstanceOf(IteratorAggregate::class, $uri);
     }
 
     public function testItFailsOnNonArrayParameter(): void
@@ -30,27 +30,27 @@ final class HeadersTest extends TestCase
     {
         $headers = new Headers(['Content-Type' => 'application/json']);
 
-        static::assertTrue($headers->has('Content-Type'));
-        static::assertTrue($headers->has('content-type'));
-        static::assertTrue($headers->has('content-Type'));
+        self::assertTrue($headers->has('Content-Type'));
+        self::assertTrue($headers->has('content-type'));
+        self::assertTrue($headers->has('content-Type'));
 
         $expected = ['application/json'];
 
-        static::assertSame($expected, $headers->get('Content-Type'));
-        static::assertSame($expected, $headers->get('content-type'));
-        static::assertSame($expected, $headers->get('content-Type'));
-        static::assertSame('application/json', $headers->first('content-Type'));
+        self::assertSame($expected, $headers->get('Content-Type'));
+        self::assertSame($expected, $headers->get('content-type'));
+        self::assertSame($expected, $headers->get('content-Type'));
+        self::assertSame('application/json', $headers->first('content-Type'));
 
-        static::assertSame([], $headers->get('Non-Existing-Header'));
+        self::assertSame([], $headers->get('Non-Existing-Header'));
 
         $headers->set('content-type', 'other/type');
 
-        static::assertSame(['application/json', 'other/type'], $headers->get('Content-Type'));
+        self::assertSame(['application/json', 'other/type'], $headers->get('Content-Type'));
 
         $iterator = iterator_to_array($headers);
 
-        static::assertArrayHasKey('content-type', $iterator);
-        static::assertSame(['application/json', 'other/type'], $iterator['content-type']);
+        self::assertArrayHasKey('content-type', $iterator);
+        self::assertSame(['application/json', 'other/type'], $iterator['content-type']);
     }
 
     public function testItCanBeSerializedToString(): void
@@ -60,7 +60,7 @@ final class HeadersTest extends TestCase
             'A' => ['B', 'C']
         ]);
 
-        static::assertSame(
+        self::assertSame(
             <<<STRING
         Content-Type: application/json
         A: B

@@ -16,9 +16,9 @@ final class ExpectationCollectionTest extends TestCase
         $expectation = $this->createMock(ResponseExpectationInterface::class);
         $collection = new ExpectationCollection($expectation);
 
-        static::assertInstanceOf(IteratorAggregate::class, $collection);
+        self::assertInstanceOf(IteratorAggregate::class, $collection);
         $iterator = $collection->getIterator();
 
-        static::assertSame($expectation, $iterator->current());
+        self::assertSame($expectation, $iterator->current());
     }
 }

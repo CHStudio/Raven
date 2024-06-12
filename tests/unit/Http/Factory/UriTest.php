@@ -14,8 +14,8 @@ final class UriTest extends TestCase
     public function testItCanBeBuiltFromString(): void
     {
         $uri = new Uri('a string');
-        static::assertInstanceOf(Stringable::class, $uri);
-        static::assertSame('a string', $uri->__toString());
+        self::assertInstanceOf(Stringable::class, $uri);
+        self::assertSame('a string', $uri->__toString());
     }
 
     public function testItFailsToBuildFromArrayWithoutBase(): void
@@ -25,16 +25,16 @@ final class UriTest extends TestCase
     }
 
     /**
-     * @dataProvider giveArrays
+     * @dataProvider provideItCanBeBuiltFromArrayCases
      *
      */
     public function testItCanBeBuiltFromArray($array, $expected): void
     {
         $uri = new Uri($array);
-        static::assertSame($expected, $uri->__toString());
+        self::assertSame($expected, $uri->__toString());
     }
 
-    public function giveArrays(): \Generator
+    public static function provideItCanBeBuiltFromArrayCases(): iterable
     {
         yield [
             [
@@ -62,7 +62,7 @@ final class UriTest extends TestCase
     }
 
     /**
-     * @dataProvider giveInvalidValues
+     * @dataProvider provideItCantBeBuiltFromOtherValuesCases
      *
      */
     public function testItCantBeBuiltFromOtherValues(): void
@@ -72,7 +72,7 @@ final class UriTest extends TestCase
         new Uri(0);
     }
 
-    public function giveInvalidValues(): \Generator
+    public static function provideItCantBeBuiltFromOtherValuesCases(): iterable
     {
         yield [0];
         yield [[]];

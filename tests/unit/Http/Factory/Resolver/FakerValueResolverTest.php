@@ -19,17 +19,17 @@ final class FakerValueResolverTest extends TestCase
             $this->createMock(ValueResolverInterface::class)
         );
 
-        static::assertInstanceOf(ValueResolverInterface::class, $resolver);
+        self::assertInstanceOf(ValueResolverInterface::class, $resolver);
     }
 
     /**
-     * @dataProvider giveNonResolvableValues
+     * @dataProvider provideItPassTheValueToNextResolverInDifferentCases
      */
     public function testItPassTheValueToNextResolverInDifferent(mixed $parameter): void
     {
         $decorated = $this->createMock(ValueResolverInterface::class);
         $decorated
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('resolve')
             ->with($parameter)
             ->willReturn($parameter);
@@ -42,7 +42,7 @@ final class FakerValueResolverTest extends TestCase
         $resolver->resolve($parameter);
     }
 
-    public function giveNonResolvableValues(): \Generator
+    public static function provideItPassTheValueToNextResolverInDifferentCases(): iterable
     {
         yield [null];
         yield [true];
@@ -53,17 +53,17 @@ final class FakerValueResolverTest extends TestCase
     }
 
     /**
-     * @dataProvider giveResolvableValues
+     * @dataProvider provideItResolveTheValueThroughFakerGeneratorCases
      */
     public function testItResolveTheValueThroughFakerGenerator(string $parameter, string $method, array $arguments): void
     {
         $decorated = $this->createMock(ValueResolverInterface::class);
         $decorated
-            ->expects(static::never())
+            ->expects(self::never())
             ->method('resolve');
         $generator = $this->createStub(Generator::class);
         $generator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('__call')
             ->with($method, $arguments)
             ->willReturn('generatedValue');
@@ -73,10 +73,10 @@ final class FakerValueResolverTest extends TestCase
             $decorated
         );
 
-        static::assertSame('generatedValue', $resolver->resolve($parameter));
+        self::assertSame('generatedValue', $resolver->resolve($parameter));
     }
 
-    public function giveResolvableValues(): \Generator
+    public static function provideItResolveTheValueThroughFakerGeneratorCases(): iterable
     {
         yield ['<method()>', 'method', []];
         yield ['<more_complexMethod(true, false, 0)>', 'more_complexMethod', [true, false, 0]];
@@ -87,11 +87,11 @@ final class FakerValueResolverTest extends TestCase
     {
         $decorated = $this->createMock(ValueResolverInterface::class);
         $decorated
-            ->expects(static::never())
+            ->expects(self::never())
             ->method('resolve');
         $generator = $this->createStub(Generator::class);
         $generator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('__call')
             ->with('method', [])
             ->willThrowException(new \InvalidArgumentException('Error'));
@@ -101,7 +101,7 @@ final class FakerValueResolverTest extends TestCase
             $decorated
         );
 
-        static::assertNull($resolver->resolve('<method()>'));
+        self::assertNull($resolver->resolve('<method()>'));
     }
 
     public function testItFailsOnFunctionArgumentThatCantBeJsonDecoded(): void
@@ -111,11 +111,11 @@ final class FakerValueResolverTest extends TestCase
 
         $decorated = $this->createMock(ValueResolverInterface::class);
         $decorated
-            ->expects(static::never())
+            ->expects(self::never())
             ->method('resolve');
         $generator = $this->createStub(Generator::class);
         $generator
-            ->expects(static::never())
+            ->expects(self::never())
             ->method('__call');
 
         $resolver = new FakerValueResolver(
@@ -123,6 +123,6 @@ final class FakerValueResolverTest extends TestCase
             $decorated
         );
 
-        static::assertNull($resolver->resolve('<method(abc")>'));
+        self::assertNull($resolver->resolve('<method(abc")>'));
     }
 }

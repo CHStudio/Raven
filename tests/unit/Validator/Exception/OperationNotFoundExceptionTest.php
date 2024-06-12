@@ -17,23 +17,23 @@ final class OperationNotFoundExceptionTest extends TestCase
     {
         $uri = $this->createMock(UriInterface::class);
         $uri
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('__toString')
             ->willReturn('http://uri');
 
         $request = $this->createMock(RequestInterface::class);
         $request
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('getMethod')
             ->willReturn('GET');
         $request
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('getUri')
             ->willReturn($uri);
 
         $exception = new OperationNotFoundException($request, new Exception('Error'));
 
-        static::assertInstanceOf(ValidationException::class, $exception);
-        static::assertStringContainsString('[GET] http://uri', $exception->getMessage());
+        self::assertInstanceOf(ValidationException::class, $exception);
+        self::assertStringContainsString('[GET] http://uri', $exception->getMessage());
     }
 }

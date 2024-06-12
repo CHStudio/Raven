@@ -26,7 +26,7 @@ final class ExecutorTest extends TestCase
             $this->createMock(ResponseValidatorInterface::class),
         );
 
-        static::assertInstanceOf(ExecutorInterface::class, $executor);
+        self::assertInstanceOf(ExecutorInterface::class, $executor);
     }
 
     public function testCanExecuteARequest(): void
@@ -39,22 +39,22 @@ final class ExecutorTest extends TestCase
         $expectation = $this->createMock(ResponseExpectationInterface::class);
 
         $httpClient
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('sendRequest')
             ->with($request)
             ->willReturn($response);
 
         $requestValidator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('validate')
             ->with($request);
         $responseValidator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('validate')
             ->with($response);
 
         $expectation
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('verify')
             ->with($response)
             ->willReturn(null);
@@ -75,21 +75,21 @@ final class ExecutorTest extends TestCase
         $expectation = $this->createMock(ResponseExpectationInterface::class);
 
         $httpClient
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('sendRequest')
             ->with($request)
             ->willReturn($response);
 
         $requestValidator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('validate')
             ->with($request);
         $responseValidator
-            ->expects(static::never())
+            ->expects(self::never())
             ->method('validate');
 
         $expectation
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('verify')
             ->with($response)
             ->willReturn(new ExpectationFailedException('Error', $expectation));

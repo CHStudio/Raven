@@ -16,7 +16,7 @@ final class StatusCodeTest extends TestCase
     {
         $expectation = new StatusCode(200);
 
-        static::assertInstanceOf(ResponseExpectationInterface::class, $expectation);
+        self::assertInstanceOf(ResponseExpectationInterface::class, $expectation);
     }
 
     public function testItVerifiesStatusCode(): void
@@ -25,11 +25,11 @@ final class StatusCodeTest extends TestCase
         $response = $this->createMock(ResponseInterface::class);
 
         $response
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('getStatusCode')
             ->willReturn(200);
 
-        static::assertNull($expectation->verify($response));
+        self::assertNull($expectation->verify($response));
     }
 
     public function testItReturnsExceptionIfFailed(): void
@@ -38,13 +38,13 @@ final class StatusCodeTest extends TestCase
         $response = $this->createMock(ResponseInterface::class);
 
         $response
-            ->expects(static::exactly(2))
+            ->expects(self::exactly(2))
             ->method('getStatusCode')
             ->willReturn(200);
 
         $result = $expectation->verify($response);
-        static::assertInstanceOf(ExpectationFailedException::class, $result);
-        static::assertSame(
+        self::assertInstanceOf(ExpectationFailedException::class, $result);
+        self::assertSame(
             'Unexpected status code 200, expected 400',
             $result->getMessage()
         );
