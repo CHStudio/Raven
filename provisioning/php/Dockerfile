@@ -1,4 +1,4 @@
-FROM php:8.1-bullseye
+FROM php:8.3-bullseye
 
 ## Install required dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends bash make gpg gnupg dirmngr git unzip \
