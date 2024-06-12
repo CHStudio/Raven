@@ -21,7 +21,7 @@ final class LoggedErrorExecutorTest extends TestCase
             $this->createMock(LoggerInterface::class)
         );
 
-        static::assertInstanceOf(ExecutorInterface::class, $executor);
+        self::assertInstanceOf(ExecutorInterface::class, $executor);
     }
 
     public function testWillLoggerWillNotBeCalledWithoutException(): void
@@ -32,11 +32,11 @@ final class LoggedErrorExecutorTest extends TestCase
         $request = $this->createMock(RequestInterface::class);
 
         $executor
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('execute')
             ->with($request, $expectations);
         $logger
-            ->expects(static::never())
+            ->expects(self::never())
             ->method('emergency');
 
         (new LoggedErrorExecutor($executor, $logger))
@@ -53,14 +53,14 @@ final class LoggedErrorExecutorTest extends TestCase
         $error = new GenericException(new \Exception('message'));
 
         $executor
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('execute')
             ->with($request, $expectations)
             ->willThrowException($error);
         $logger
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('emergency')
-            ->with(static::stringContains('message'), ['error' => $error]);
+            ->with(self::stringContains('message'), ['error' => $error]);
 
         (new LoggedErrorExecutor($executor, $logger))
             ->execute($request, $expectations);

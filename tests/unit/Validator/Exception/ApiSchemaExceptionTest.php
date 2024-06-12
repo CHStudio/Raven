@@ -15,7 +15,7 @@ final class ApiSchemaExceptionTest extends TestCase
     {
         $exception = new ApiSchemaException(new Exception('Error'));
 
-        static::assertInstanceOf(ValidationException::class, $exception);
-        static::assertStringContainsString('Error', $exception->getMessage());
+        self::assertInstanceOf(ValidationException::class, $exception);
+        self::assertStringContainsString('Error', $exception->getMessage());
     }
 }

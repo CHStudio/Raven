@@ -20,7 +20,7 @@ final class LoggedRequestValidatorTest extends TestCase
 
         $factory = new LoggedRequestValidator($logger, $decorated);
 
-        static::assertInstanceOf(RequestValidatorInterface::class, $factory);
+        self::assertInstanceOf(RequestValidatorInterface::class, $factory);
     }
 
     public function testItLogsRequestAtDebugLevel(): void
@@ -31,20 +31,20 @@ final class LoggedRequestValidatorTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
 
         $uri
-            ->expects(static::exactly(2))
+            ->expects(self::exactly(2))
             ->method('__toString')
             ->willReturn('https://chstudio.fr');
         $request
-            ->expects(static::exactly(2))
+            ->expects(self::exactly(2))
             ->method('getMethod')
             ->willReturn('GET');
         $request
-            ->expects(static::exactly(2))
+            ->expects(self::exactly(2))
             ->method('getUri')
             ->willReturn($uri);
 
         $logger
-            ->expects(static::exactly(2))
+            ->expects(self::exactly(2))
             ->method('debug')
             ->withConsecutive(
                 ['Start testing Request: [GET] https://chstudio.fr'],
@@ -52,7 +52,7 @@ final class LoggedRequestValidatorTest extends TestCase
             );
 
         $decorated
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('validate')
             ->with($request);
 

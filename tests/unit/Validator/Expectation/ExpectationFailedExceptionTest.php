@@ -16,7 +16,7 @@ final class ExpectationFailedExceptionTest extends TestCase
         $failedExpectation = $this->createMock(ResponseExpectationInterface::class);
         $exception = new ExpectationFailedException('message', $failedExpectation);
 
-        static::assertInstanceOf(RuntimeException::class, $exception);
-        static::assertSame($failedExpectation, $exception->expectation);
+        self::assertInstanceOf(RuntimeException::class, $exception);
+        self::assertSame($failedExpectation, $exception->expectation);
     }
 }

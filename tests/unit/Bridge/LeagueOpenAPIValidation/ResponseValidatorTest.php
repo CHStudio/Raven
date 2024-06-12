@@ -38,7 +38,7 @@ final class ResponseValidatorTest extends TestCase
             new ValidationExceptionMapper()
         );
 
-        static::assertInstanceOf(ResponseValidatorInterface::class, $validator);
+        self::assertInstanceOf(ResponseValidatorInterface::class, $validator);
     }
 
     public function testItCanValidateResponse(): void
@@ -46,10 +46,10 @@ final class ResponseValidatorTest extends TestCase
         [, $request, $response, $responseValidator] = $this->prepare();
 
         $responseValidator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('validate')
             ->with(
-                static::callback(fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
+                self::callback(static fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
                 $response
             );
 
@@ -81,15 +81,15 @@ final class ResponseValidatorTest extends TestCase
         );
 
         $uri
-            ->expects(static::atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('getPath')
             ->willReturn('/api/path');
 
         $responseValidator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('validate')
             ->with(
-                static::callback(fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/api/path'),
+                self::callback(static fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/api/path'),
                 $response
             );
 
@@ -123,11 +123,11 @@ final class ResponseValidatorTest extends TestCase
             'https://chstudio.fr/anotherpath'
         );
         $uri
-            ->expects(static::never())
+            ->expects(self::never())
             ->method('getPath');
 
         $responseValidator
-            ->expects(static::never())
+            ->expects(self::never())
             ->method('validate');
 
         $validator = new ResponseValidator(
@@ -146,10 +146,10 @@ final class ResponseValidatorTest extends TestCase
         [, $request, $response, $responseValidator] = $this->prepare();
 
         $responseValidator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('validate')
             ->with(
-                static::callback(fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
+                self::callback(static fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
                 $response
             )
             ->willThrowException(new NoResponseCode('Error'));
@@ -172,16 +172,16 @@ final class ResponseValidatorTest extends TestCase
 
         $mapper = $this->createMock(ValidationExceptionMapper::class);
         $mapper
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('map')
             ->with($error)
             ->willReturn(new GenericException($error));
 
         $responseValidator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('validate')
             ->with(
-                static::callback(fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
+                self::callback(static fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
                 $response
             )
             ->willThrowException($error);
@@ -198,10 +198,10 @@ final class ResponseValidatorTest extends TestCase
         [, $request, $response, $responseValidator] = $this->prepare();
 
         $responseValidator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('validate')
             ->with(
-                static::callback(fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
+                self::callback(static fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
                 $response
             )
             ->willThrowException(new InvalidArgumentException('Message'));
@@ -228,10 +228,10 @@ final class ResponseValidatorTest extends TestCase
         $property->setValue($specFinderError, '/a/path/to/SpecFinder.php');
 
         $responseValidator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('validate')
             ->with(
-                static::callback(fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
+                self::callback(static fn (OperationAddress $op) => $op->method() === 'get' && $op->path() === '/'),
                 $response
             )
             ->willThrowException($specFinderError);
@@ -259,23 +259,23 @@ final class ResponseValidatorTest extends TestCase
 
         $uri = $this->createMock(UriInterface::class);
         $uri
-            ->expects(static::atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('__toString')
             ->willReturn($uriString ?? 'https://chstudio.fr/');
         $request = $this->createMock(RequestInterface::class);
         $request
-            ->expects(static::atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('getUri')
             ->willReturn($uri);
         $request
-            ->expects(static::atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('getMethod')
             ->willReturn('GET');
         $response = $this->createMock(ResponseInterface::class);
 
         $responseValidator = $this->createMock(PSR7ResponseValidator::class);
         $responseValidator
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('getSchema')
             ->willReturn($openApi);
 

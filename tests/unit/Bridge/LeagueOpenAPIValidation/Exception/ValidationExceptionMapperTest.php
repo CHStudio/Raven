@@ -33,7 +33,7 @@ final class ValidationExceptionMapperTest extends TestCase
             )
         );
 
-        static::assertNull(
+        self::assertNull(
             (new ValidationExceptionMapper())->map($exceptionChain)
         );
     }
@@ -53,9 +53,9 @@ final class ValidationExceptionMapperTest extends TestCase
 
         $mapped = (new ValidationExceptionMapper())->map($exceptionChain);
 
-        static::assertInstanceOf(DataSchemaException::class, $mapped);
-        static::assertSame('a.b', $mapped->path);
-        static::assertSame($error, $mapped->getPrevious());
+        self::assertInstanceOf(DataSchemaException::class, $mapped);
+        self::assertSame('a.b', $mapped->path);
+        self::assertSame($error, $mapped->getPrevious());
     }
 
     public function testItMapsInvalidSchema(): void
@@ -72,8 +72,8 @@ final class ValidationExceptionMapperTest extends TestCase
 
         $mapped = (new ValidationExceptionMapper())->map($exceptionChain);
 
-        static::assertInstanceOf(ApiSchemaException::class, $mapped);
-        static::assertSame($error, $mapped->getPrevious());
+        self::assertInstanceOf(ApiSchemaException::class, $mapped);
+        self::assertSame($error, $mapped->getPrevious());
     }
 
     public function testItMapsValidationFailed(): void
@@ -90,7 +90,7 @@ final class ValidationExceptionMapperTest extends TestCase
 
         $mapped = (new ValidationExceptionMapper())->map($exceptionChain);
 
-        static::assertInstanceOf(GenericException::class, $mapped);
+        self::assertInstanceOf(GenericException::class, $mapped);
     }
 
     public function testItMapsInvalidQueryArgs(): void
@@ -113,7 +113,7 @@ final class ValidationExceptionMapperTest extends TestCase
 
         $mapped = (new ValidationExceptionMapper())->map($exceptionChain);
 
-        static::assertInstanceOf(GenericException::class, $mapped);
-        static::assertSame($invalidQueryArgsError, $mapped->getPrevious());
+        self::assertInstanceOf(GenericException::class, $mapped);
+        self::assertSame($invalidQueryArgsError, $mapped->getPrevious());
     }
 }

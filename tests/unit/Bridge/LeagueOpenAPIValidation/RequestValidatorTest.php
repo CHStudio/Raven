@@ -30,77 +30,77 @@ final class RequestValidatorTest extends TestCase
             new ValidationExceptionMapper()
         );
 
-        static::assertInstanceOf(RequestValidatorInterface::class, $validator);
+        self::assertInstanceOf(RequestValidatorInterface::class, $validator);
     }
 
-        public function testItCanValidateRequest(): void
-        {
-            $requestValidator = $this->createMock(PSR7RequestValidator::class);
-            $request = $this->createMock(RequestInterface::class);
+    public function testItCanValidateRequest(): void
+    {
+        $requestValidator = $this->createMock(PSR7RequestValidator::class);
+        $request = $this->createMock(RequestInterface::class);
 
-            $requestValidator
-                ->expects(static::once())
-                ->method('validate')
-                ->with($request);
+        $requestValidator
+            ->expects(self::once())
+            ->method('validate')
+            ->with($request);
 
-            (new RequestValidator(
-                $requestValidator,
-                new ValidationExceptionMapper()
-            ))->validate($request);
-        }
+        (new RequestValidator(
+            $requestValidator,
+            new ValidationExceptionMapper()
+        ))->validate($request);
+    }
 
-        public function testItCallsExceptionMapperOnThrowable(): void
-        {
-            $this->expectException(ApiSchemaException::class);
+    public function testItCallsExceptionMapperOnThrowable(): void
+    {
+        $this->expectException(ApiSchemaException::class);
 
-            $requestValidator = $this->createMock(PSR7RequestValidator::class);
-            $validationMapper = $this->createMock(ValidationExceptionMapper::class);
-            $request = $this->createMock(RequestInterface::class);
+        $requestValidator = $this->createMock(PSR7RequestValidator::class);
+        $validationMapper = $this->createMock(ValidationExceptionMapper::class);
+        $request = $this->createMock(RequestInterface::class);
 
-            $error = new Exception('Error');
+        $error = new Exception('Error');
 
-            $requestValidator
-                ->expects(static::once())
-                ->method('validate')
-                ->with($request)
-                ->willThrowException($error);
+        $requestValidator
+            ->expects(self::once())
+            ->method('validate')
+            ->with($request)
+            ->willThrowException($error);
 
-            $validationMapper
-                ->expects(static::once())
-                ->method('map')
-                ->with($error)
-                ->willReturn(new ApiSchemaException($error));
+        $validationMapper
+            ->expects(self::once())
+            ->method('map')
+            ->with($error)
+            ->willReturn(new ApiSchemaException($error));
 
-            (new RequestValidator($requestValidator, $validationMapper))->validate($request);
-        }
+        (new RequestValidator($requestValidator, $validationMapper))->validate($request);
+    }
 
-        /**
-         * @dataProvider giveExceptions
-         */
-        public function testItCanCatchExceptions(Throwable $error, string $exception): void
-        {
-            $this->expectException($exception);
+    /**
+     * @dataProvider provideItCanCatchExceptionsCases
+     */
+    public function testItCanCatchExceptions(Throwable $error, string $exception): void
+    {
+        $this->expectException($exception);
 
-            $requestValidator = $this->createMock(PSR7RequestValidator::class);
-            $request = $this->createMock(RequestInterface::class);
+        $requestValidator = $this->createMock(PSR7RequestValidator::class);
+        $request = $this->createMock(RequestInterface::class);
 
-            $requestValidator
-                ->expects(static::once())
-                ->method('validate')
-                ->with($request)
-                ->willThrowException($error);
+        $requestValidator
+            ->expects(self::once())
+            ->method('validate')
+            ->with($request)
+            ->willThrowException($error);
 
-            (new RequestValidator(
-                $requestValidator,
-                new ValidationExceptionMapper()
-            ))->validate($request);
-        }
+        (new RequestValidator(
+            $requestValidator,
+            new ValidationExceptionMapper()
+        ))->validate($request);
+    }
 
-        public function giveExceptions(): \Generator
-        {
-            yield [new NoOperation('Message'), OperationNotFoundException::class];
-            yield [new NoPath('Message'), OperationNotFoundException::class];
-            yield [new MultipleOperationsMismatchForRequest('Message'), OperationNotFoundException::class];
-            yield [new RuntimeException('Message'), RuntimeException::class];
-        }
+    public static function provideItCanCatchExceptionsCases(): iterable
+    {
+        yield [new NoOperation('Message'), OperationNotFoundException::class];
+        yield [new NoPath('Message'), OperationNotFoundException::class];
+        yield [new MultipleOperationsMismatchForRequest('Message'), OperationNotFoundException::class];
+        yield [new RuntimeException('Message'), RuntimeException::class];
+    }
 }

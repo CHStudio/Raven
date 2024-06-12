@@ -20,9 +20,9 @@ final class DataSchemaExceptionTest extends TestCase
             new Exception('Error')
         );
 
-        static::assertInstanceOf(ValidationException::class, $exception);
-        static::assertStringContainsString(var_export($value, true), $exception->getMessage());
-        static::assertStringContainsString('p.a.th', $exception->getMessage());
-        static::assertStringContainsString('Error', $exception->getMessage());
+        self::assertInstanceOf(ValidationException::class, $exception);
+        self::assertStringContainsString(var_export($value, true), $exception->getMessage());
+        self::assertStringContainsString('p.a.th', $exception->getMessage());
+        self::assertStringContainsString('Error', $exception->getMessage());
     }
 }

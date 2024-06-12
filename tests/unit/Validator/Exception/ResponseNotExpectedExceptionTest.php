@@ -18,30 +18,30 @@ final class ResponseNotExpectedExceptionTest extends TestCase
     {
         $uri = $this->createMock(UriInterface::class);
         $uri
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('__toString')
             ->willReturn('http://uri');
 
         $request = $this->createMock(RequestInterface::class);
         $request
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('getMethod')
             ->willReturn('GET');
         $request
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('getUri')
             ->willReturn($uri);
 
         $response = $this->createMock(ResponseInterface::class);
         $response
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('getStatusCode')
             ->willReturn(450);
 
         $exception = new ResponseNotExpectedException($request, $response, new Exception('Error'));
 
-        static::assertInstanceOf(ValidationException::class, $exception);
-        static::assertStringContainsString('[GET] http://uri', $exception->getMessage());
-        static::assertStringContainsString('450', $exception->getMessage());
+        self::assertInstanceOf(ValidationException::class, $exception);
+        self::assertStringContainsString('[GET] http://uri', $exception->getMessage());
+        self::assertStringContainsString('450', $exception->getMessage());
     }
 }

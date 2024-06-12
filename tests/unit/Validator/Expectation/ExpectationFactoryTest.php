@@ -16,11 +16,11 @@ final class ExpectationFactoryTest extends TestCase
         $collection = (new ExpectationFactory())
             ->fromArray(['statusCode' => 201]);
 
-        static::assertInstanceOf(ExpectationCollection::class, $collection);
+        self::assertInstanceOf(ExpectationCollection::class, $collection);
         $expectations = iterator_to_array($collection);
-        static::assertCount(1, $expectations);
-        static::assertInstanceOf(StatusCode::class, $expectations[0]);
-        static::assertSame(201, $expectations[0]->statusCode);
+        self::assertCount(1, $expectations);
+        self::assertInstanceOf(StatusCode::class, $expectations[0]);
+        self::assertSame(201, $expectations[0]->statusCode);
     }
 
     public function testItReturnsAnEmptyCollectionWhenNoExpectationsCanBeBuilt(): void
@@ -28,8 +28,8 @@ final class ExpectationFactoryTest extends TestCase
         $collection = (new ExpectationFactory())
             ->fromArray(['a' => true, 'b' => 'c']);
 
-        static::assertInstanceOf(ExpectationCollection::class, $collection);
+        self::assertInstanceOf(ExpectationCollection::class, $collection);
         $expectations = iterator_to_array($collection);
-        static::assertCount(0, $expectations);
+        self::assertCount(0, $expectations);
     }
 }

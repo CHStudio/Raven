@@ -20,7 +20,7 @@ final class LoggedResponseValidatorTest extends TestCase
 
         $factory = new LoggedResponseValidator($logger, $decorated);
 
-        static::assertInstanceOf(ResponseValidatorInterface::class, $factory);
+        self::assertInstanceOf(ResponseValidatorInterface::class, $factory);
     }
 
     public function testItLogsRequestAtDebugLevel(): void
@@ -31,16 +31,16 @@ final class LoggedResponseValidatorTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
 
         $response
-            ->expects(static::exactly(2))
+            ->expects(self::exactly(2))
             ->method('getStatusCode')
             ->willReturn(408);
         $response
-            ->expects(static::exactly(2))
+            ->expects(self::exactly(2))
             ->method('getReasonPhrase')
             ->willReturn('I\'m not a teapost');
 
         $logger
-            ->expects(static::exactly(2))
+            ->expects(self::exactly(2))
             ->method('debug')
             ->withConsecutive(
                 ['Start testing Response: [408] I\'m not a teapost'],
@@ -48,7 +48,7 @@ final class LoggedResponseValidatorTest extends TestCase
             );
 
         $decorated
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('validate')
             ->with($response, $request);
 

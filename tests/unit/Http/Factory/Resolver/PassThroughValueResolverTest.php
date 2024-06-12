@@ -14,16 +14,16 @@ final class PassThroughValueResolverTest extends TestCase
     {
         $resolver = new PassThroughValueResolver();
 
-        static::assertInstanceOf(ValueResolverInterface::class, $resolver);
+        self::assertInstanceOf(ValueResolverInterface::class, $resolver);
     }
 
     public function testItReturnGivenValue(): void
     {
         $resolver = new PassThroughValueResolver();
 
-        static::assertNull($resolver->resolve(null));
-        static::assertSame(0, $resolver->resolve(0));
-        static::assertTrue($resolver->resolve(true));
-        static::assertSame([], $resolver->resolve([]));
+        self::assertNull($resolver->resolve(null));
+        self::assertSame(0, $resolver->resolve(0));
+        self::assertTrue($resolver->resolve(true));
+        self::assertSame([], $resolver->resolve([]));
     }
 }

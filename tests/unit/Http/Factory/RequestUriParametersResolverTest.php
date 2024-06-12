@@ -19,7 +19,7 @@ final class RequestUriParametersResolverTest extends TestCase
 
         $factory = new RequestUriParametersResolver($bodyResolver, $decorated);
 
-        static::assertInstanceOf(RequestFactoryInterface::class, $factory);
+        self::assertInstanceOf(RequestFactoryInterface::class, $factory);
     }
 
     public function testItResolvesUriParametersWhenThereIsOne(): void
@@ -28,13 +28,13 @@ final class RequestUriParametersResolverTest extends TestCase
         $decorated = $this->createMock(RequestFactoryInterface::class);
 
         $bodyResolver
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('resolve')
             ->with(['a' => 'b'])
             ->willReturn(['c']);
 
         $decorated
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('fromArray')
             ->with(['uri' => ['parameters' => ['c']]])
             ->willReturn($this->createMock(RequestInterface::class));
@@ -48,10 +48,10 @@ final class RequestUriParametersResolverTest extends TestCase
         $bodyResolver = $this->createMock(ValueResolverInterface::class);
         $decorated = $this->createMock(RequestFactoryInterface::class);
 
-        $bodyResolver->expects(static::never())->method('resolve');
+        $bodyResolver->expects(self::never())->method('resolve');
 
         $decorated
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('fromArray')
             ->with([])
             ->willReturn($this->createMock(RequestInterface::class));

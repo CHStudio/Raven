@@ -15,8 +15,8 @@ final class GenericExceptionTest extends TestCase
     {
         $exception = new GenericException(new Exception('Error'));
 
-        static::assertInstanceOf(ValidationException::class, $exception);
-        static::assertStringContainsString('Something went wrong:', $exception->getMessage());
-        static::assertStringContainsString('Error', $exception->getMessage());
+        self::assertInstanceOf(ValidationException::class, $exception);
+        self::assertStringContainsString('Something went wrong:', $exception->getMessage());
+        self::assertStringContainsString('Error', $exception->getMessage());
     }
 }

@@ -23,7 +23,7 @@ final class RequestFactoryTest extends TestCase
 
         $factory = new RequestFactory($requestFactory, $streamFactory);
 
-        static::assertInstanceOf(RequestFactoryInterface::class, $factory);
+        self::assertInstanceOf(RequestFactoryInterface::class, $factory);
     }
 
     public function testItThrowsExceptionWhenUriIsNotPresent(): void
@@ -51,24 +51,24 @@ final class RequestFactoryTest extends TestCase
         $bodyStream = $this->createMock(StreamInterface::class);
 
         $requestFactory
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('createRequest')
             ->with('POST', 'https://chstudio.fr')
             ->willReturn($request);
 
         $request
-            ->expects(static::exactly(2))
+            ->expects(self::exactly(2))
             ->method('withHeader')
             ->withConsecutive(... $this->denormalizeHeaders($headers))
             ->willReturn($request);
         $request
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('withBody')
             ->with($bodyStream)
             ->willReturn($request);
 
         $streamFactory
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('createStream')
             ->with(json_encode($body))
             ->willReturn($bodyStream);
@@ -81,7 +81,7 @@ final class RequestFactoryTest extends TestCase
                 'body' => $body
             ]);
 
-        static::assertInstanceOf(RequestInterface::class, $request);
+        self::assertInstanceOf(RequestInterface::class, $request);
     }
 
     public function testItBuildRequestFromArrayWithoutBody(): void
@@ -91,27 +91,27 @@ final class RequestFactoryTest extends TestCase
         $request = $this->createMock(RequestInterface::class);
 
         $requestFactory
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('createRequest')
             ->with('GET', 'https://chstudio.fr')
             ->willReturn($request);
 
-        $request->expects(static::never())->method('withHeader');
-        $request->expects(static::never())->method('withBody');
+        $request->expects(self::never())->method('withHeader');
+        $request->expects(self::never())->method('withBody');
 
-        $streamFactory->expects(static::never())->method('createStream');
+        $streamFactory->expects(self::never())->method('createStream');
 
         $request = (new RequestFactory($requestFactory, $streamFactory))
             ->fromArray([
                 'uri' => 'https://chstudio.fr'
             ]);
 
-        static::assertInstanceOf(RequestInterface::class, $request);
+        self::assertInstanceOf(RequestInterface::class, $request);
     }
 
     /**
      *
-     * @dataProvider givesHeadersAndBody
+     * @dataProvider provideItBuildRequestFromArrayWithFormDataBodyCases
      */
     public function testItBuildRequestFromArrayWithFormDataBody($body, $headers, $bodyAsString): void
     {
@@ -121,30 +121,30 @@ final class RequestFactoryTest extends TestCase
         $bodyStream = $this->createMock(StreamInterface::class);
 
         $requestFactory
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('createRequest')
             ->with('POST', 'https://chstudio.fr')
             ->willReturn($request);
 
         if ((is_countable($headers) ? \count($headers) : 0) > 0) {
             $request
-                ->expects(static::exactly(1))
+                ->expects(self::exactly(1))
                 ->method('withHeader')
                 ->withConsecutive(... $this->denormalizeHeaders($headers))
                 ->willReturn($request);
         } else {
             $request
-                ->expects(static::never())
+                ->expects(self::never())
                 ->method('withHeader');
         }
         $request
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('withBody')
             ->with($bodyStream)
             ->willReturn($request);
 
         $streamFactory
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('createStream')
             ->with($bodyAsString)
             ->willReturn($bodyStream);
@@ -157,10 +157,10 @@ final class RequestFactoryTest extends TestCase
                 'body' => $body
             ]);
 
-        static::assertInstanceOf(RequestInterface::class, $request);
+        self::assertInstanceOf(RequestInterface::class, $request);
     }
 
-    public function givesHeadersAndBody(): \Generator
+    public static function provideItBuildRequestFromArrayWithFormDataBodyCases(): iterable
     {
         $body = ['a' => 'b', 'c' => true];
 

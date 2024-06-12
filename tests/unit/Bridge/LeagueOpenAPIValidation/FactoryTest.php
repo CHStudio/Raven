@@ -21,18 +21,18 @@ final class FactoryTest extends TestCase
     {
         $leagueBuilder = $this->createMock(ValidatorBuilder::class);
         $leagueBuilder
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('getRequestValidator')
             ->willReturn($this->createMock(PSR7RequestValidator::class));
         $leagueBuilder
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('getResponseValidator')
             ->willReturn($this->createMock(PSR7ResponseValidator::class));
 
         $factory = new Factory($leagueBuilder);
 
-        static::assertInstanceOf(RequestValidator::class, $factory->getRequestValidator());
-        static::assertInstanceOf(ResponseValidator::class, $factory->getResponseValidator());
+        self::assertInstanceOf(RequestValidator::class, $factory->getRequestValidator());
+        self::assertInstanceOf(ResponseValidator::class, $factory->getResponseValidator());
     }
 
     public function testItCaptureErrorsDuringRequestValidatorCreation(): void
@@ -41,7 +41,7 @@ final class FactoryTest extends TestCase
 
         $leagueBuilder = $this->createMock(ValidatorBuilder::class);
         $leagueBuilder
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('getRequestValidator')
             ->willThrowException(new Exception('Anything happened there…'));
 
@@ -54,7 +54,7 @@ final class FactoryTest extends TestCase
 
         $leagueBuilder = $this->createMock(ValidatorBuilder::class);
         $leagueBuilder
-            ->expects(static::once())
+            ->expects(self::once())
             ->method('getResponseValidator')
             ->willThrowException(new Exception('Anything happened there…'));
 
@@ -71,14 +71,14 @@ final class FactoryTest extends TestCase
         YAML);
 
         if ($writeSuccess === false) {
-            static::markTestSkipped('Temp file wasn\'t written.');
+            self::markTestSkipped('Temp file wasn\'t written.');
             return;
         }
 
         $factory = Factory::fromYamlFile($file);
 
-        static::assertInstanceOf(RequestValidator::class, $factory->getRequestValidator());
-        static::assertInstanceOf(ResponseValidator::class, $factory->getResponseValidator());
+        self::assertInstanceOf(RequestValidator::class, $factory->getRequestValidator());
+        self::assertInstanceOf(ResponseValidator::class, $factory->getResponseValidator());
     }
 
     public function testItCanBeBuiltFromJsonFile(): void
@@ -94,14 +94,14 @@ final class FactoryTest extends TestCase
         JSON);
 
         if ($writeSuccess === false) {
-            static::markTestSkipped('Temp file wasn\'t written.');
+            self::markTestSkipped('Temp file wasn\'t written.');
             return;
         }
 
         $factory = Factory::fromJsonFile($file);
 
-        static::assertInstanceOf(RequestValidator::class, $factory->getRequestValidator());
-        static::assertInstanceOf(ResponseValidator::class, $factory->getResponseValidator());
+        self::assertInstanceOf(RequestValidator::class, $factory->getRequestValidator());
+        self::assertInstanceOf(ResponseValidator::class, $factory->getResponseValidator());
     }
 
     public function testItCantBeBuiltFromInexistantJsonFile(): void
