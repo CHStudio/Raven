@@ -13,8 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 
+## [v0.4.0]
+
+### Changed
+
+- Removed the `cebe/php-openapi` package and installed `devizzent/cebe-php-openapi`
+  instead. The first one is deprecated today. This new package is compatible
+  with OpenAPI spec v3.1.
+
 ## [v0.3.0] - 2023-01-24
+
 ### Fixed
+
 - When an URI matches multiple API operations (example: `/api/path` and `/api/{pattern}`)
   the `ResponseValidator` was looping over each and tried to validate the `ResponseInterface`
   body with the definition. Now the `ResponseValidator` will only validates against
@@ -22,17 +32,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   That last point wasn't caught before.
 
 ## Changed
+
 - Capture explicitely new exceptions from the league/openapi-psr7-validator
   library to ensure those errors will be useful for the end user (retrieving
   correct message, correct file…).
 
 ## [v0.2.0] - 2022-10-29
+
 ### Changed
+
 - Add more open version constraints to let install Raven in more projects.
   As a library, being too strict with dependencies is always bad.
 
 ## [v0.1.0] - 2022-10-06
+
 ### Added
+
 - Introduces a new object in the `CHStudio\Raven\Http\Factory` namespace named:
   `RequestUriParametersResolver`. It allows resolving URI parameters value using
   a `ValueResolverInterface` object.
