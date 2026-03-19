@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 
+## [v0.5.0]
+
+### Added
+
+- Add a specific error when the `RequiredParameterMissingException` is triggered from the validator. No more cryptic message when your request is missing a required parameter.
+
+### Changed
+
+- Ensure compatibility with PHP8.5
+- Update packages and dependencies (PHPUnit 13)
+- Use rector to migrate the code to an up to date version
+
 ## [v0.4.0]
 
 ### Changed
@@ -58,7 +70,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 >
 > This is the first release for this library, now we are able to test OpenAPI docs !
 
-[Unreleased]: https://github.com/chstudio/raven/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/chstudio/raven/compare/v0.5.0...HEAD
+[v0.3.0]: https://github.com/chstudio/raven/releases/tag/v0.5.0
+[v0.3.0]: https://github.com/chstudio/raven/releases/tag/v0.4.0
 [v0.3.0]: https://github.com/chstudio/raven/releases/tag/v0.3.0
 [v0.2.0]: https://github.com/chstudio/raven/releases/tag/v0.2.0
 [v0.1.0]: https://github.com/chstudio/raven/releases/tag/v0.1.0
