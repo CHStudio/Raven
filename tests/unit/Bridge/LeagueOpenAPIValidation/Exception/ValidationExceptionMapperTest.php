@@ -8,8 +8,10 @@ use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Exception\ValidationExceptionM
 use CHStudio\Raven\Validator\Exception\ApiSchemaException;
 use CHStudio\Raven\Validator\Exception\DataSchemaException;
 use CHStudio\Raven\Validator\Exception\GenericException;
+use CHStudio\Raven\Validator\Exception\RequiredParameterMissingException;
 use Exception;
 use InvalidArgumentException;
+use League\OpenAPIValidation\PSR7\Exception\Validation\InvalidPath;
 use League\OpenAPIValidation\PSR7\Exception\Validation\InvalidQueryArgs;
 use League\OpenAPIValidation\PSR7\Exception\Validation\RequiredParameterMissing;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
@@ -97,7 +99,7 @@ final class ValidationExceptionMapperTest extends TestCase
         $invalidQueryArgsError = InvalidQueryArgs::becauseOfMissingRequiredArgument(
             'argument',
             $operationAddress,
-            RequiredParameterMissing::fromName('argument')
+            InvalidPath::fromAddr(new OperationAddress('path', 'method'))
         );
 
         $exceptionChain = new Exception(
@@ -114,5 +116,13 @@ final class ValidationExceptionMapperTest extends TestCase
 
         self::assertInstanceOf(GenericException::class, $mapped);
         self::assertSame($invalidQueryArgsError, $mapped->getPrevious());
+    }
+
+    public function testItMapsRequiredParameterMissing(): void
+    {
+        $exceptionChain = RequiredParameterMissing::fromName('missingParameter');
+        $mapped = (new ValidationExceptionMapper())->map($exceptionChain);
+
+        self::assertInstanceOf(RequiredParameterMissingException::class, $mapped);
     }
 }

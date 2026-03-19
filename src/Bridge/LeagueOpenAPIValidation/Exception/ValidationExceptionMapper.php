@@ -5,8 +5,10 @@ namespace CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Exception;
 use CHStudio\Raven\Validator\Exception\ApiSchemaException;
 use CHStudio\Raven\Validator\Exception\DataSchemaException;
 use CHStudio\Raven\Validator\Exception\GenericException;
+use CHStudio\Raven\Validator\Exception\RequiredParameterMissingException;
 use CHStudio\Raven\Validator\Exception\ValidationException;
 use League\OpenAPIValidation\PSR7\Exception\Validation\InvalidQueryArgs;
+use League\OpenAPIValidation\PSR7\Exception\Validation\RequiredParameterMissing;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
 use League\OpenAPIValidation\Schema\BreadCrumb;
 use League\OpenAPIValidation\Schema\Exception\InvalidSchema;
@@ -30,6 +32,8 @@ class ValidationExceptionMapper
             return $this->mapSchemaMismatch($lastError);
         } elseif ($lastError instanceof InvalidSchema) {
             return new ApiSchemaException($lastError);
+        } elseif ($lastError instanceof RequiredParameterMissing) {
+            return new RequiredParameterMissingException($lastError);
         } elseif ($lastError instanceof ValidationFailed) {
             return $this->mapGeneric($chain, $lastError);
         }
