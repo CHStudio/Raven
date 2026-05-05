@@ -29,7 +29,7 @@ class Uri implements Stringable
             $search = [];
             $replace = [];
             foreach ($parameters as $name => $parameter) {
-                if (!\is_string($name) || !\is_string($parameter)) {
+                if (!\is_string($name) || !\is_scalar($parameter)) {
                     throw new InvalidArgumentException(\sprintf(
                         'Invalid parameter given {name: %s, parameter: %s}',
                         var_export($name, true),
@@ -37,7 +37,7 @@ class Uri implements Stringable
                     ));
                 }
                 $search[] = $name;
-                $replace[] = $parameter;
+                $replace[] = (string) $parameter;
             }
 
             $this->uri = str_replace(

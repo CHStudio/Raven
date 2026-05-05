@@ -6,6 +6,7 @@ namespace CHStudio\RavenTest\Http\Factory;
 
 use CHStudio\Raven\Http\Factory\Uri;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Stringable;
 
@@ -24,7 +25,7 @@ final class UriTest extends TestCase
         new Uri(['parameters' => []]);
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideItCanBeBuiltFromArrayCases')]
+    #[DataProvider('provideItCanBeBuiltFromArrayCases')]
     public function testItCanBeBuiltFromArray($array, $expected): void
     {
         $uri = new Uri($array);
@@ -53,12 +54,39 @@ final class UriTest extends TestCase
 
         yield [
             [
+                'base' => 'http://chstudio.fr?{name}={value}',
+                'parameters' => [
+                    '{name}' => 'integer',
+                    '{value}' => 13
+            ]], 'http://chstudio.fr?integer=13'
+        ];
+
+        yield [
+            [
+                'base' => 'http://chstudio.fr?{name}={value}',
+                'parameters' => [
+                    '{name}' => 'boolean',
+                    '{value}' => true
+            ]], 'http://chstudio.fr?boolean=1'
+        ];
+
+        yield [
+            [
+                'base' => 'http://chstudio.fr?{name}={value}',
+                'parameters' => [
+                    '{name}' => 'float',
+                    '{value}' => 13.12
+            ]], 'http://chstudio.fr?float=13.12'
+        ];
+
+        yield [
+            [
                 'base' => 'https://chstudio.fr'
             ], 'https://chstudio.fr'
         ];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideItCantBeBuiltFromOtherValuesCases')]
+    #[DataProvider('provideItCantBeBuiltFromOtherValuesCases')]
     public function testItCantBeBuiltFromOtherValues($value): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -72,7 +100,6 @@ final class UriTest extends TestCase
         yield "Nothing in the parameters" => [[]];
         yield "No base but valid parameters" => [['parameters' => []]];
         yield [['base' => 'http://example.com', 'parameters' => 'not-an-array']];
-        yield [['base' => 'http://example.com', 'parameters' => ['int' => 0]]];
         yield [null];
     }
 }
