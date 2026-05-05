@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Exception;
 
 use CHStudio\Raven\Validator\Exception\ApiSchemaException;
