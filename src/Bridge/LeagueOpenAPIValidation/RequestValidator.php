@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CHStudio\Raven\Bridge\LeagueOpenAPIValidation;
 
 use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Exception\ValidationExceptionMapper;

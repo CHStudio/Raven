@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CHStudio\Raven\Validator\Exception;
 
 use League\OpenAPIValidation\PSR7\Exception\Validation\RequiredParameterMissing;

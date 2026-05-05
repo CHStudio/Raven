@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CHStudio\Raven\Bridge\LeagueOpenAPIValidation;
 
 use CHStudio\Raven\Bridge\LeagueOpenAPIValidation\Exception\ValidationExceptionMapper;
@@ -52,7 +54,7 @@ class ResponseValidator implements ResponseValidatorInterface
     {
         $pathFinder = new PathFinder(
             $this->adapted->getSchema(),
-            $request->getUri(),
+            $request->getUri()->__toString(),
             $request->getMethod()
         );
 

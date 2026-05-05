@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CHStudio\Raven\Validator\Exception;
 
 use Psr\Http\Message\RequestInterface;
